@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Job Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f3f5fa;--card:#ffffff;--text:#0f172a;--muted:#64748b;--line:#e5e9f2;--accent:#4f46e5;--accent2:#7c3aed;--accent-soft:#eef2ff;
+--ok:#047857;--okbg:#d1fae5;--warn:#b45309;--warnbg:#fef3c7;--danger:#e11d48;--shadow:0 1px 2px rgba(15,23,42,.05),0 8px 24px rgba(15,23,42,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0f1a;--card:#131a2a;--text:#e6eaf3;--muted:#8d99b1;--line:#232d44;--accent:#818cf8;--accent2:#a78bfa;--accent-soft:#1c2347;--ok:#6ee7b7;--okbg:#0f3326;--warn:#fcd34d;--warnbg:#3a2d0e;--danger:#fb7185;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0b0f1a;--card:#131a2a;--text:#e6eaf3;--muted:#8d99b1;--line:#232d44;--accent:#818cf8;--accent2:#a78bfa;--accent-soft:#1c2347;--ok:#6ee7b7;--okbg:#0f3326;--warn:#fcd34d;--warnbg:#3a2d0e;--danger:#fb7185;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14.5px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.hero{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:30px 16px 74px}
+.hero-in,.wrap{max-width:980px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;backdrop-filter:blur(4px)}
+h1{font-size:24px;margin:0;font-weight:700;letter-spacing:-.02em}
+.sub{margin:2px 0 0;opacity:.85;font-size:13.5px}
+.wrap{padding:0 16px 40px;margin-top:-52px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;border:1px solid var(--line)}
+.ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none}
+.ico.a{background:var(--accent-soft);color:var(--accent)}.ico.b{background:var(--okbg);color:var(--ok)}.ico.c{background:var(--warnbg);color:var(--warn)}
+.stat b{display:block;font-size:24px;line-height:1.1;font-weight:700}
+.stat span{color:var(--muted);font-size:12.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:16px}
+.card h2{font-size:15px;margin:0;padding:16px 18px 0;font-weight:600}
+form{padding:14px 18px 18px;display:grid;grid-template-columns:1fr 1.3fr 1.3fr;gap:12px}
+label{display:flex;flex-direction:column;font-size:12px;font-weight:500;color:var(--muted);gap:5px}
+input,select{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.row2{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sw{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);font-weight:500;cursor:pointer;flex-direction:row}
+.sw input{position:absolute;opacity:0;width:0;height:0}
+.track{width:40px;height:23px;border-radius:99px;background:var(--line);position:relative;transition:.2s;flex:none}
+.track::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw input:checked+.track{background:var(--accent)}.sw input:checked+.track::after{left:20px}
+.sw input:focus-visible+.track{box-shadow:0 0 0 3px var(--accent-soft)}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px;font-weight:500;transition:.15s}
+button:hover{border-color:var(--accent)}
+button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;color:#fff;font-weight:600;padding:10px 20px;box-shadow:0 4px 14px rgba(79,70,229,.35)}
+button.primary:hover{filter:brightness(1.07)}
+.tools{display:flex;gap:10px;padding:14px 18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line)}
+.tools input{flex:1;min-width:160px;max-width:320px}
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:3px}
+.seg button{border:0;background:none;padding:6px 14px;border-radius:8px;color:var(--muted)}
+.seg button.on{background:var(--card);color:var(--accent);box-shadow:0 1px 3px rgba(15,23,42,.15);font-weight:600}
+.sp{flex:1}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{text-align:left;padding:12px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+tbody tr{transition:background .12s}tbody tr:hover{background:var(--accent-soft)}
+tr:last-child td{border-bottom:0}
+.co{display:flex;align-items:center;gap:12px;font-weight:600}
+.av{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex:none}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500;background:var(--accent-soft);color:var(--accent)}
+.muted{color:var(--muted);font-size:12.5px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 12px;font-size:12.5px;font-weight:600;border:0}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.yes{background:var(--okbg);color:var(--ok)}.pill.no{background:var(--warnbg);color:var(--warn)}
+.del{border:0;background:none;color:var(--muted);padding:6px;border-radius:8px;display:grid;place-items:center}
+.del:hover{color:var(--danger);background:var(--bg)}
+.empty{text-align:center;color:var(--muted);padding:46px 16px}
+.empty svg{opacity:.5;margin-bottom:8px}
+.foot{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;color:var(--muted);font-size:12.5px;flex-wrap:wrap;gap:8px;border-top:1px solid var(--line)}
+@media (max-width:640px){
+ form{grid-template-columns:1fr}
+ .stats{gap:8px}.stat{padding:10px;flex-direction:column;align-items:flex-start;gap:6px}.stat b{font-size:20px}
+ .hero{padding-bottom:70px}
+}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-in">
+  <div class="brand">
+    <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 13h20"/></svg></div>
+    <div><h1>Job Tracker</h1><p class="sub">Every opportunity, source and application in one place.</p></div>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <section class="stats">
+    <div class="stat"><div class="ico a"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><div><b id="sTotal">0</b><span>Total jobs</span></div></div>
+    <div class="stat"><div class="ico b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div><b id="sApplied">0</b><span>Applied</span></div></div>
+    <div class="stat"><div class="ico c"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b id="sPending">0</b><span>Not applied</span></div></div>
+  </section>
+
+  <section class="card">
+    <h2>Add a new job</h2>
+    <form id="f">
+      <label>Job source
+        <select id="source">
+          <option>LinkedIn</option><option>Naukri</option><option>Indeed</option><option>Instahyre</option>
+          <option>Glassdoor</option><option>Company website</option><option>Referral</option><option>Other</option>
+        </select>
+      </label>
+      <label>Company name<input id="company" required placeholder="e.g. Acme Corp"></label>
+      <label>Role<input id="role" required placeholder="e.g. Frontend Developer"></label>
+      <div class="row2">
+        <label class="sw"><input type="checkbox" id="applied"><span class="track"></span>I’ve already applied</label>
+        <button class="primary" type="submit">+ Add job</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="tools">
+      <input id="q" placeholder="Search company, role or source…">
+      <div class="seg" id="tabs">
+        <button data-f="all" class="on">All</button>
+        <button data-f="yes">Applied</button>
+        <button data-f="no">Not applied</button>
+      </div>
+      <span class="sp"></span>
+      <button id="csv">Export CSV</button>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Company</th><th>Role</th><th>Source</th><th>Status</th><th style="width:48px"></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="foot"><span id="count"></span><span>Click a status to switch it</span></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var KEY='job-tracker-v1', jobs=[], filter='all';
+  try{ var raw=localStorage.getItem(KEY); if(raw) jobs=JSON.parse(raw)||[]; }catch(e){ jobs=[]; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(jobs)); }catch(e){} }
+  var $=function(id){return document.getElementById(id)};
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  var colors=['#4f46e5','#0891b2','#db2777','#ea580c','#059669','#7c3aed','#2563eb','#c026d3'];
+  function color(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return colors[Math.abs(h)%colors.length]}
+  function fmt(t){ if(!t) return ''; try{ return new Date(t).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}); }catch(e){ return ''; } }
+  var trash='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>';
+
+  function render(){
+    var q=$('q').value.trim().toLowerCase();
+    var list=jobs.filter(function(j){
+      if(filter==='yes'&&!j.applied) return false;
+      if(filter==='no'&&j.applied) return false;
+      return !q||(j.source+' '+j.company+' '+j.role).toLowerCase().indexOf(q)>-1;
+    });
+    $('rows').innerHTML=list.length?list.map(function(j){
+      var d=fmt(j.added);
+      return '<tr><td><div class="co"><span class="av" style="background:'+color(j.company)+'">'+esc(j.company.charAt(0).toUpperCase())+'</span><span>'+esc(j.company)+(d?'<div class="muted" style="font-weight:400">Added '+d+'</div>':'')+'</span></div></td>'+
+      '<td>'+esc(j.role)+'</td><td><span class="chip">'+esc(j.source)+'</span></td>'+
+      '<td><button class="pill '+(j.applied?'yes':'no')+'" data-t="'+j.id+'">'+(j.applied?'Applied':'Not applied')+'</button></td>'+
+      '<td><button class="del" data-d="'+j.id+'" aria-label="Delete job">'+trash+'</button></td></tr>';
+    }).join(''):'<tr><td colspan="5" class="empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><div>'+(jobs.length?'No jobs match your search.':'No jobs yet — add your first one above.')+'</div></td></tr>';
+    var a=jobs.filter(function(j){return j.applied}).length;
+    $('sTotal').textContent=jobs.length; $('sApplied').textContent=a; $('sPending').textContent=jobs.length-a;
+    $('count').textContent='Showing '+list.length+' of '+jobs.length;
+  }
+
+  $('f').addEventListener('submit',function(e){
+    e.preventDefault();
+    jobs.unshift({id:Date.now()+Math.random().toString(36).slice(2,6),source:$('source').value,company:$('company').value.trim(),role:$('role').value.trim(),applied:$('applied').checked,added:Date.now()});
+    save(); $('company').value=''; $('role').value=''; $('applied').checked=false; $('company').focus(); render();
+  });
+  $('rows').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    var t=b.getAttribute('data-t'), d=b.getAttribute('data-d');
+    if(t){ jobs.forEach(function(j){ if(j.id===t) j.applied=!j.applied; }); save(); render(); }
+    if(d){ jobs=jobs.filter(function(j){return j.id!==d}); save(); render(); }
+  });
+  $('tabs').addEventListener('click',function(e){
+    var f=e.target.getAttribute('data-f'); if(!f) return; filter=f;
+    Array.prototype.forEach.call($('tabs').children,function(b){ b.classList.toggle('on',b.getAttribute('data-f')===f); });
+    render();
+  });
+  $('q').addEventListener('input',render);
+  $('csv').addEventListener('click',function(){
+    var rows=[['Company','Role','Source','Applied']].concat(jobs.map(function(j){return [j.company,j.role,j.source,j.applied?'Yes':'No']}));
+    var text=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\n');
+    var w=window.open('','_blank'); if(w){ w.document.write('<pre>'+esc(text)+'</pre>'); w.document.close(); }
+  });
+  render();
+})();
+</script>
+</body>
+</html>
